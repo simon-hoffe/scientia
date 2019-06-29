@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Scientia'
+project = u'Scientia'
 copyright = '2019, Simon Hoffe'
 author = 'Simon Hoffe'
 master_doc = 'index'
@@ -46,8 +46,11 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
+# See https://sphinx-rtd-theme.readthedocs.io/en/stable/configuring.html
 html_theme = 'sphinx_rtd_theme'
-pygments_style = 'default'
+#pygments_style = 'default'
+pygments_style = 'sphinx'
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
