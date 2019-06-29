@@ -2,6 +2,9 @@
 # Read the Docs configuration file
 # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
 
+# Help on the Syntax highlighting issue:
+# https://github.com/readthedocs/readthedocs.org/issues/4072
+
 # Required
 version: 2
 
@@ -19,5 +22,6 @@ formats: all
 # Optionally set the version of Python and requirements required to build your docs
 python:
   version: 3.7
+  system_packages: true
   install:
     - requirements: docs/requirements.txt
