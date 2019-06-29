@@ -10,6 +10,12 @@ Welcome to Scientia's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+Outlook VBA Scripts
+===================
+
+.. literalinclude:: ../outlook-vba/SJH_Email_Export.bas
+   :language: vbscript
+   :linenos:
 
 
 Indices and tables
