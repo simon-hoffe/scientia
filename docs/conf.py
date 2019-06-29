@@ -20,6 +20,7 @@
 project = 'Scientia'
 copyright = '2019, Simon Hoffe'
 author = 'Simon Hoffe'
+master_doc = 'index'
 
 
 # -- General configuration ---------------------------------------------------
