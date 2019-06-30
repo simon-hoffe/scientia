@@ -1,14 +1,13 @@
-.. Scientia documentation master file, created by
-   sphinx-quickstart on Sat Jun 29 07:47:04 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. _contents:
 
-Welcome to Scientia's documentation!
-====================================
+Scientia Site Contents
+======================
+
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   intro
+   outlook-vba
 
 Outlook VBA Scripts
 ===================
@@ -18,9 +17,9 @@ Outlook VBA Scripts
    :linenos:
 
 
-Indices and tables
-==================
+.. // Indices and tables
+.. // ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. // * :ref:`genindex`
+.. // * :ref:`modindex`
+.. // * :ref:`search`
