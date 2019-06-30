@@ -2,31 +2,6 @@ Attribute VB_Name = "SJH_Email_Export"
 Option Explicit
 
 '------------------------------------------------------------------------
-Function BrowseForFolder(Optional OpenAt As Variant) As Variant
-  Dim ShellApp As Object
-  Set ShellApp = CreateObject("Shell.Application"). _
- BrowseForFolder(0, "Please choose a folder", 0, OpenAt)
- 
- On Error Resume Next
-    BrowseForFolder = ShellApp.self.Path
- On Error GoTo 0
- 
- Set ShellApp = Nothing
-    Select Case Mid(BrowseForFolder, 2, 1)
-        Case Is = ":"
-            If Left(BrowseForFolder, 1) = ":" Then GoTo Invalid
-        Case Is = "\"
-            If Not Left(BrowseForFolder, 1) = "\" Then GoTo Invalid
-        Case Else
-            GoTo Invalid
-    End Select
- Exit Function
- 
-Invalid:
- BrowseForFolder = False
-End Function
-
-'------------------------------------------------------------------------
 Public Sub ShowSenders()
     Dim oMail As Outlook.MailItem
     Dim objItem As Object
@@ -64,6 +39,7 @@ Public Sub ShowSenders()
     Next
   
 End Sub
+
 '------------------------------------------------------------------------
 Public Sub SaveSelectedEmails()
     Dim oMail As Outlook.MailItem
