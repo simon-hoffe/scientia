@@ -51,6 +51,15 @@ html_theme = 'sphinx_rtd_theme'
 #pygments_style = 'default'
 pygments_style = 'sphinx'
 
+html_theme_options = {
+    # Toc options
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
