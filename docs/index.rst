@@ -9,13 +9,6 @@ Scientia Site Contents
    intro
    outlook-vba
 
-Outlook VBA Scripts
-===================
-
-.. literalinclude:: ../outlook-vba/SJH_Email_Export.bas
-   :language: vbscript
-   :linenos:
-
 
 .. // Indices and tables
 .. // ==================
