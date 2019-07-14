@@ -462,7 +462,7 @@ sSenderString As String _
             Exit For
         Next
     Else
-        sDomain = "@paramount"
+        sDomain = "@local"
     End If
 
     sSenderString = sInitials & sDomain
