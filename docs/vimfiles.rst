@@ -8,7 +8,7 @@ VIM Scripts
 Introduction
 ------------
 
-Personal reference for my own VIM environment setup and scrips.
+Personal reference for my own VIM environment setup and scripts.
 
 Repository on GitHub: `vimfiles <https://github.com/simon-hoffe/scientia/tree/master/vimfiles>`_.
 
