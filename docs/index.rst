@@ -9,6 +9,7 @@ Scientia Site Contents
 
    intro
    outlook-vba
+   vimfiles
 
 
 .. //> Index
