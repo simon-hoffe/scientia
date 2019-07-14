@@ -1,5 +1,10 @@
-Attribute VB_Name = "SJH_Email_Export"
+Attribute VB_Name = "modEmailExport"
 Option Explicit
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' modEmailExport
+' By Simon Hoffe, https://github.com/simon-hoffe
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
 
 '------------------------------------------------------------------------
 ''' SaveSelectedEmails()
@@ -149,8 +154,7 @@ End Sub
 '''
 ''' The workhorse called by SaveSelectedEmails() and SaveOpenEmail()
 
-
-Private Sub SaveOneMessageAsMsg(oMail As Outlook.MailItem)
+Private Sub SaveOneMessageAsMsg(ByRef oMail As Outlook.MailItem)
     Dim oAttachment As Outlook.Attachment
     Dim objItem As Object
     Dim sPath As String
@@ -171,6 +175,8 @@ Private Sub SaveOneMessageAsMsg(oMail As Outlook.MailItem)
     Dim vTemp As Variant
     Dim vPropNames() As Variant
     Dim bHiddenProp As Boolean
+    Dim Result As Boolean
+                
 
     Dim oRegEx As Object
     Set oRegEx = CreateObject("vbscript.regexp")
@@ -178,7 +184,7 @@ Private Sub SaveOneMessageAsMsg(oMail As Outlook.MailItem)
 
     enviro = CStr(Environ("USERPROFILE"))
     sPath = enviro & "\Documents\Emails\"
-
+    
     If Not TestDirExist(sPath) Then
         nMsgResult = MsgBox( _
             Prompt:=sPath & " does not exist.", _
@@ -230,7 +236,23 @@ Private Sub SaveOneMessageAsMsg(oMail As Outlook.MailItem)
     End If
 
     If Not bSkipEmail Then
+        ' Save the email to file on disk
         oMail.SaveAs sPath & sName & sExt, olMSG
+        
+        ' Set the Modified Timestamp of the file to the Sent Timestamp
+        Result = SetFileDateTime(FileName:=sPath & sName & sExt, _
+            FileDateTime:=oMail.SentOn, _
+            WhichDateToChange:=FileDateLastModified, _
+            NoGMTConvert:=False)
+        
+        If Result = False Then
+            Debug.Print "An error occurred with SetFileDateTime."
+        Else
+            ' If all is well, add a category called "Saved" to the email in the
+            ' Outlook Mailbox to flag that it's been saved
+            AddCategoryToEmail oMail, "Saved"
+            oMail.Save
+        End If
 
         For Each oAttachment In oMail.Attachments
             bSkipAttachment = False
@@ -252,6 +274,10 @@ Private Sub SaveOneMessageAsMsg(oMail As Outlook.MailItem)
 
             If bHiddenProp Then
                 Select Case sAttExt
+                    Case ""
+                        bSkipAttachment = True
+                    Case "."
+                        bSkipAttachment = True
                     Case ".png"
                         bSkipAttachment = True
                     Case ".jpg"
@@ -259,6 +285,7 @@ Private Sub SaveOneMessageAsMsg(oMail As Outlook.MailItem)
                     Case ".gif"
                         bSkipAttachment = True
                     Case Else
+                        ' Don't skip hidden attachments which aren't in the above list
                         bSkipAttachment = False
                 End Select
             End If
@@ -269,6 +296,13 @@ Private Sub SaveOneMessageAsMsg(oMail As Outlook.MailItem)
             If oRegEx.Test(sAttExt) Then
                 bSkipAttachment = True
             End If
+            
+            ' Ignore files which have no extension
+            ' regardless of whether tagged as hidden or not
+            oRegEx.Pattern = "^\.{0,1}$"
+            If oRegEx.Test(sAttExt) Then
+                bSkipAttachment = True
+            End If
 
             If Not bSkipAttachment Then
                 sName = "E " & sDateTime & " ___ " & sAttName
@@ -276,6 +310,15 @@ Private Sub SaveOneMessageAsMsg(oMail As Outlook.MailItem)
                 MakeFileNameUnique sPath, sName, sAttExt
 
                 oAttachment.SaveAsFile sPath & sName & sAttExt
+                
+                Result = SetFileDateTime(FileName:=sPath & sName & sAttExt, _
+                    FileDateTime:=oMail.SentOn, _
+                    WhichDateToChange:=FileDateLastModified, _
+                    NoGMTConvert:=False)
+                
+                If Result = False Then
+                    Debug.Print "An error occurred with SetFileDateTime."
+                End If
             End If
         Next
     End If
@@ -307,6 +350,38 @@ sDateString As String _
     dtDate = oMail.SentOn
     sDateString = Format(dtDate, "yyyymmdd", vbUseSystemDayOfWeek, vbUseSystem) & _
         Format(dtDate, "-hhnn", vbUseSystemDayOfWeek, vbUseSystem)
+End Sub
+
+'------------------------------------------------------------------------
+Private Sub AddCategoryToEmail(ByRef oMail As Outlook.MailItem, _
+   sNewCategory As String _
+)
+    Dim sCategorySeparator As String
+    Dim sCategories() As String
+    Dim bNewCatExist As Boolean
+    Dim sOne As Variant
+
+    sCategorySeparator = RegKeyRead("HKEY_CURRENT_USER\Control Panel\International\sList")
+    If Len(sCategorySeparator) <> 1 Then
+        sCategorySeparator = ","
+    End If
+
+    sCategories = Split(oMail.Categories, sCategorySeparator)
+    
+    bNewCatExist = False
+    For Each sOne In sCategories
+        If StrComp(UCase(sOne), UCase(sNewCategory), vbTextCompare) = 0 Then
+            bNewCatExist = True
+            Exit For
+        End If
+    Next sOne
+ 
+    If Not bNewCatExist Then
+        ReDim Preserve sCategories(UBound(sCategories) + 1)
+        sCategories(UBound(sCategories)) = sNewCategory
+        
+        oMail.Categories = Join(sCategories, sCategorySeparator)
+    End If
 End Sub
 
 '------------------------------------------------------------------------
@@ -387,7 +462,7 @@ sSenderString As String _
             Exit For
         Next
     Else
-        sDomain = "@local"
+        sDomain = "@paramount"
     End If
 
     sSenderString = sInitials & sDomain
@@ -504,5 +579,40 @@ Private Function TestFileExist(sPath As String) As Boolean
 End Function
 
 
+'------------------------------------------------------------------------
+Function BrowseForFolder(Optional OpenAt As Variant) As Variant
+  Dim ShellApp As Object
+  Set ShellApp = CreateObject("Shell.Application"). _
+ BrowseForFolder(0, "Please choose a folder", 0, OpenAt)
+ 
+ On Error Resume Next
+    BrowseForFolder = ShellApp.self.Path
+ On Error GoTo 0
+ 
+ Set ShellApp = Nothing
+    Select Case Mid(BrowseForFolder, 2, 1)
+        Case Is = ":"
+            If Left(BrowseForFolder, 1) = ":" Then GoTo Invalid
+        Case Is = "\"
+            If Not Left(BrowseForFolder, 1) = "\" Then GoTo Invalid
+        Case Else
+            GoTo Invalid
+    End Select
+ Exit Function
+ 
+Invalid:
+ BrowseForFolder = False
+End Function
 
+'reads the value for the registry key i_RegKey
+'if the key cannot be found, the return value is ""
+' https://vba-corner.livejournal.com/3054.html
+Function RegKeyRead(i_RegKey As String) As String
+Dim myWS As Object
 
+  On Error Resume Next
+  'access Windows scripting
+  Set myWS = CreateObject("WScript.Shell")
+  'read key from registry
+  RegKeyRead = myWS.RegRead(i_RegKey)
+End Function
