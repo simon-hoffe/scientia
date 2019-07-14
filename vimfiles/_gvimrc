@@ -1,0 +1,13 @@
+colorscheme darkblue
+set guifont=Lucida_Console:h9:cANSI:qDRAFT
+set hidden
+set fileencodings=latin1,utf-8,ucs-bom
+set encoding=latin1
+set lines=40 columns=128
+set number
+set visualbell
+
+command Edgvimrc e $HOME/Dropbox/_VIM/_gvimrc
+
+source $HOME/Dropbox/_VIM/_gvim_simon
+
