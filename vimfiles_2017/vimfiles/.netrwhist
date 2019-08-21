@@ -1,0 +1,6 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =4
+let g:netrw_dirhist_1='C:/Users/simon.hoffe/00-AMM/00-WIP/243 4901 and 9803 HDD issue/YES_Warehouse_check_2017-06-25/Day1_50hdd_logs - Copy/W9C0GYCA'
+let g:netrw_dirhist_2='C:/Users/simon.hoffe/00-AMM/00-WIP/243 4901 and 9803 HDD issue/YES_Warehouse_check_2017-06-25/Day1_50hdd_logs - Copy'
+let g:netrw_dirhist_3='C:/Users/simon.hoffe/00-AMM/00-WIP/243 4901 and 9803 HDD issue/YES_Warehouse_check_2017-06-27/Day3_54hdd_logs'
+let g:netrw_dirhist_4='C:'

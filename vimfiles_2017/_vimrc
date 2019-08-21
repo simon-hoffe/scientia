@@ -1,0 +1,150 @@
+"set isfname="@,48-57,/,\,.,-,_,+,,,#,$,%,{,},[,],@-@,!,~,="
+source $VIM/_vimrc
+
+map! <S-Space><S-Space> 
+set autoindent
+set expandtab
+set guifont=Courier_New:h8:cANSI
+set hidden
+set history=500
+set hlsearch
+set incsearch
+set shiftwidth=4
+set smartindent
+set tabstop=4
+set whichwrap=b,s,<,>,[,]
+
+set nobackup
+set writebackup
+
+let g:session_none = 1 "Disable sessions
+
+map <c-w><c-t> :WMToggle<cr>
+
+filetype on
+set ignorecase
+let Tlist_File_Fold_Auto_Close=1
+
+
+let Grep_Shell_Quote_Char='"'
+let Grep_Find_Use_Xargs=0
+" nnoremap <silent> <F7> :Rgrep<CR>
+nnoremap <silent> <F5> :TlistToggle<CR>
+
+set nu
+set lines=25 columns=100
+
+runtime colors/bluegreen.vim
+
+command! Edvimrc e $HOME/_vimrc
+
+
+function Kwbd(kwbdStage)
+    if(a:kwbdStage == 1)
+        if(!buflisted(winbufnr(0)))
+            bd!
+            return
+        endif
+        let g:kwbdBufNum = bufnr("%")
+        let g:kwbdWinNum = winnr()
+        windo call Kwbd(2)
+        execute "normal " . g:kwbdWinNum . ""
+        let g:buflistedLeft = 0
+        let g:bufFinalJump = 0
+        let l:nBufs = bufnr("$")
+        let l:i = 1
+        while(l:i <= l:nBufs)
+            if(l:i != g:kwbdBufNum)
+                if(buflisted(l:i))
+                    let g:buflistedLeft = g:buflistedLeft + 1
+                else
+                    if(bufexists(l:i) && !strlen(bufname(l:i)) && !g:bufFinalJump)
+                        let g:bufFinalJump = l:i
+                    endif
+                endif
+            endif
+            let l:i = l:i + 1
+        endwhile
+        if(!g:buflistedLeft)
+            if(g:bufFinalJump)
+                windo if(buflisted(winbufnr(0))) | execute "b! " . g:bufFinalJump | endif
+            else
+                enew
+                let l:newBuf = bufnr("%")
+                windo if(buflisted(winbufnr(0))) | execute "b! " . l:newBuf | endif
+            endif
+            execute "normal " . g:kwbdWinNum . ""
+        endif
+        if(buflisted(g:kwbdBufNum) || g:kwbdBufNum == bufnr("%"))
+            execute "bd! " . g:kwbdBufNum
+        endif
+        if(!g:buflistedLeft)
+            set buflisted
+            set bufhidden=delete
+            set buftype=nofile
+            setlocal noswapfile
+            normal athis is the scratch buffer
+        endif
+    else
+        if(bufnr("%") == g:kwbdBufNum)
+            let prevbufvar = bufnr("#")
+            if(prevbufvar > 0 && buflisted(prevbufvar) && prevbufvar != g:kwbdBufNum)
+                b #
+            else
+                bn
+            endif
+        endif
+    endif
+endfunction 
+
+command! Kbd call Kwbd(1)
+
+command! -nargs=1 Finddef exe "vimgrep " . "/\\c-D<args>/j" . Makedir . "/**/Makefile"
+
+function! s:Replace(str1, str2)
+    execute "%s/\\C\\<" . a:str1 . "\\>/" . a:str2 . "/g"
+endfunction
+
+function! s:Ack(str1)
+    execute "lgetexpr system('ack --cc --asm --make --uec -i --nogroup \"" . a:str1 . "\"')"
+    execute "lopen"
+endfunction
+
+function! s:Aack(str1)
+    execute "lgetexpr system('ack -a -i --nogroup \"" . a:str1 . "\"')"
+    execute "lopen"
+endfunction
+
+
+command! -nargs=* Replace call <SID>Replace(<f-args>)
+command! -nargs=* Ack call <SID>Ack(<f-args>)
+command! -nargs=* Aack call <SID>Aack(<f-args>)
+
+nnoremap <silent> <F8> :Ack <c-r><c-w><CR>
+vnoremap <silent> <F8> y :Ack <c-r>0<CR>
+
+unmap <c-a>
+unmap <c-y>
+nnoremap <silent> <F6> :Finddef <c-r><c-w><CR>
+
+set ut=2000
+
+
+"nmap <silent> zs gQ cgetexpr ""<CR>g/<c-r><c-w>/caddex expand("%") . ":" . line(".") . ":" . getline(".")<CR>FoldMatching! <c-r><c-w><CR>vi<CR>
+nmap <silent> zs :FoldMatching! <c-r><c-w><CR>
+vmap <silent> zs y:FoldMatching! <c-r>0<CR>
+nmap <silent> zh :FoldMatching <c-r><c-w> 0<CR>
+vmap <silent> zh y:FoldMatching <c-r>0 0<CR>
+command! Fixcr %s/^// | %s/$// | %s//\r/g
+
+command! SetupSysEn cd c:/sys_en | set path=.,./**,c:/sys_en/**
+
+"Comment a line
+map <silent> cc :s+^\(\s*\)\(.*\)$+/\*\1\2\*/+ \|nohl <CR>
+
+"Uncomment a line
+map <silent> cr :s+^\(\s*\)\/\*\(.*\)\*\/\s*$+\1\2+ \|nohl <CR>
+
+"Swap the conditionals in an if statement
+map <silent> ifs :s/(\s*\(\S\+\)\>\s*\(\S\+\)\s*\<\(\S\+\)\>\s*)/(\3 \2 \1)/ \|nohl <CR>
+
