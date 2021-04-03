@@ -10,6 +10,7 @@ Scientia Site Contents
    intro
    outlook-vba
    vimfiles
+   metaquotes
 
 
 .. //> Index
