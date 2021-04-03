@@ -1,7 +1,3 @@
 " vim: set syntax=vim:set encoding=latin1
 
 source $HOME/SJH/scientia/vimfiles/_vim_common_simon
-
-set listchars=eol:¶,tab:»›,trail:·,nbsp:¸,extends:›,precedes:‹
-set list
-set showbreak=¦
