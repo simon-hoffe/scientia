@@ -25,6 +25,7 @@ MT4 Setup
 - Git clone the MT4 base repo into a new folder on the machine, then manually copy it across to overlay onto the MQL4 folder in Terminal datadirectory.
 
 ::
+
   git clone https://github.com/simon-hoffe/mql5-mt4-base.git
 
   git clone git@github.com-personal:simon-hoffe/mql5-mt4-base.git
@@ -32,6 +33,7 @@ MT4 Setup
 Then need to initialise the sub-modules and clone them as well.
 
 ::
+
   git submodule update --init --recursive
 
 

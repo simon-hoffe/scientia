@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = u'Scientia'
-copyright = '2019, Simon Hoffe'
+copyright = '2021, Simon Hoffe'
 author = 'Simon Hoffe'
 master_doc = 'index'
 
