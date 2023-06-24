@@ -1,0 +1,470 @@
+" Links
+" https://www.rosipov.com/blog/my-vimrc-annotated/
+
+set fileencodings=ucs-bom,utf-8,latin1
+set fileencoding=utf-8
+set encoding=utf-8
+set termencoding=utf-8
+set nocompatible  " Enable all VIM features
+set number        " Line numbering
+set visualbell    " Visual bell, instead of audible
+set hlsearch      " Highlight searches
+set modeline      " Enable modeline, even though this can be a security risk
+set history=50    " keep 50 lines of command line history
+set ruler         " show the cursor position all the time
+syntax on         " Enables syntax highlighting by default.
+set background=dark  " Dark background
+set termwinscroll=100000  " Enable lots of scroll depth for a terminal window
+
+" Uncomment the following to have Vim jump to the last position when reopening a file
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" Uncomment the following to have Vim load indentation rules and plugins
+" according to the detected filetype.
+filetype plugin indent on
+
+set showcmd        " Show (partial) command in status line.
+set showmatch      " Show matching brackets.
+set ignorecase     " Do case insensitive matching
+set smartcase      " Do smart case matching
+set incsearch      " Incremental search
+"set autowrite      " Automatically save before commands like :next and :make
+set hidden         " Hide buffers when they are abandoned
+"set mouse=a        " Enable mouse usage (all modes)
+
+"set listchars=eol:¶,tab:»›,trail:·,nbsp:¸,extends:›,precedes:‹
+set listchars=tab:»›,trail:·,nbsp:¸,extends:›,precedes:‹
+set list
+
+" When wrapping lines, break the line on sensible characters. Then prefix the wrapped line.
+set linebreak
+set showbreak=¦
+
+set nojoinspaces
+set sidescroll=1
+set sidescrolloff=2
+set shiftwidth=4
+set tabstop=4
+set expandtab
+
+" Insert CR and don't stay in insert mode
+" https://vim.fandom.com/wiki/Insert_newline_without_entering_insert_mode
+nmap <S-Enter> O<Esc>
+nmap <CR> o<Esc>
+
+" Don't do anything automatic with formatting
+set formatoptions=
+set nrformats=
+
+" Useful commands
+command! Cdp cd %:p:h
+
+"Scroll screen one char in all directions 'without' moving cursor
+nnoremap <C-k> <C-y>
+nnoremap <C-j> <C-e>
+vnoremap <C-k> <C-y>
+vnoremap <C-j> <C-e>
+nnoremap <C-h> zh
+nnoremap <C-l> zl
+vnoremap <C-h> zh
+vnoremap <C-l> zl
+
+
+" Map the direction keys to scroll through wrapped lines
+nnoremap j gj
+nnoremap <Down> gj
+inoremap <Down> <C-o>gj
+
+nnoremap k gk
+nnoremap <Up> gk
+inoremap <Up> <C-o>gk
+
+" backspace and cursor keys wrap to previous/next line
+set backspace=indent,eol,start whichwrap+=<,>,[,]
+
+" backspace in Visual mode deletes selection
+vnoremap <BS> d
+
+" CTRL-A is Select all
+"noremap <C-A> gggH<C-O>G
+"inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+"cnoremap <C-A> <C-C>gggH<C-O>G
+"onoremap <C-A> <C-C>gggH<C-O>G
+"snoremap <C-A> <C-C>gggH<C-O>G
+"xnoremap <C-A> <C-C>ggVG
+
+
+
+set t_Co=256
+set mouse=
+
+" Install Vundle Notes
+" git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+let g:vimspector_enable_mappings = 'HUMAN'
+
+let g:ycm_auto_trigger = 0
+let g:ycm_show_diagnostics_ui = 0
+
+let g:ycm_python_interpreter_path = ''
+let g:ycm_python_sys_path = []
+let g:ycm_extra_conf_vim_data = [
+  \  'g:ycm_python_interpreter_path',
+  \  'g:ycm_python_sys_path'
+  \]
+let g:ycm_global_ycm_extra_conf = '~/global_extra_conf.py'
+
+:silent! YcmRestartServer
+
+" https://github.com/tmhedberg/SimpylFold
+let g:SimpylFold_docstring_preview = 0
+let g:SimpylFold_fold_import = 0
+let g:SimpylFold_fold_docstring = 0
+
+let g:pymode_lint_ignore = ["E501"]
+let g:pymode_options_max_line_length = 100
+let g:pymode_lint_options_pep8 =
+    \ {'max_line_length': g:pymode_options_max_line_length}
+let g:pymode_lint_options_pylint =
+    \ {'max-line-length': g:pymode_options_max_line_length}
+
+let g:pymode_indent = 1
+
+let g:airline#extensions#tabline#enabled = 1
+"let g:airline_statusline_ontop = 1
+let g:airline_powerline_fonts = 1
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+"Plugin 'tmhedberg/SimpylFold'
+"Plugin 'vim-scripts/indentpython.vim'
+"Plugin 'ycm-core/YouCompleteMe'
+Plugin 'jnurmine/Zenburn'
+"Plugin 'vim-syntastic/syntastic'
+"Plugin 'nvie/vim-flake8'
+Plugin 'chrisbra/csv.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'kien/ctrlp.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'yegappan/taglist'
+Plugin 'romainl/vim-qf'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'embear/vim-foldsearch'
+Plugin 'vim-airline/vim-airline'
+
+if has('python3')
+"    Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+"    Plugin 'python-mode/python-mode'
+"    Plugin 'puremourning/vimspector'
+endif
+
+
+" https://realpython.com/vim-and-python-a-match-made-in-heaven/
+"install with :PluginInstall
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+let NERDTreeShowBookmarks=1 "show bookmarks
+
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+set splitbelow
+set splitright
+
+"split navigations
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+
+" Enable folding with the spacebar
+nnoremap <space> za
+
+
+"python with virtualenv support
+if has('python3')
+py3 << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  execfile(activate_this, dict(__file__=activate_this))
+EOF
+endif
+
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>a
+
+set noswapfile
+
+" https://github.com/j1z0/vim-config/blob/master/vimrc
+
+" Use the below highlight group when displaying bad whitespace is desired.
+highlight BadWhitespace ctermbg=red guibg=red
+
+" For full syntax highlighting:
+let python_highlight_all=1
+
+" Keep indentation level from previous line:
+autocmd FileType python set autoindent
+
+autocmd BufRead *.md syn match markdownError "\w\@<=\w\@="
+
+"packadd! vimspector
+
+au BufNewFile,BufRead *.mqh,*.mq5,*.mq4 setf cpp
+
+au BufNewFile *.py,*.pyw,*.c,*.h,*.sh, set fileformat=unix
+
+au BufNewFile,BufRead *.py,*.pyw set
+    \ tabstop=4
+    \ softtabstop=4
+    \ shiftwidth=4
+    \ textwidth=100
+    \ expandtab
+    \ autoindent
+    \ fileformat=unix
+    \ | match BadWhiteSpace /^\t\+/
+    \ | match BadWhiteSpace /^\s\+$/
+
+nnoremap <Leader>dd :set mouse=a <bar> call vimspector#Launch()<CR>
+nnoremap <Leader>de :set mouse= <bar> call vimspector#Reset()<CR>
+nnoremap <Leader>dc :call vimspector#Continue()<CR>
+
+nnoremap <Leader>dt :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <Leader>dT :call vimspector#ClearBreakpoints()<CR>
+
+nmap <Leader>dk <Plug>VimspectorRestart
+nmap <Leader>dh <Plug>VimspectorStepOut
+nmap <Leader>dl <Plug>VimspectorStepInto
+nmap <Leader>dj <Plug>VimspectorStepOver
+
+"map <ESC>[8~    <End>
+"map <ESC>[7~    <Home>
+"imap <ESC>[8~    <End>
+"imap <ESC>[7~    <Home>
+
+"tmap <End>    <C-e>
+"tmap <Home>   <C-a>
+
+"Toggle YouCompleteMe on and off with F3
+function Toggle_ycm()
+    if g:ycm_show_diagnostics_ui == 0
+        let g:ycm_auto_trigger = 1
+        let g:ycm_show_diagnostics_ui = 1
+        :YcmRestartServer
+        :e
+        :echo "YCM on"
+    elseif g:ycm_show_diagnostics_ui == 1
+        let g:ycm_auto_trigger = 0
+        let g:ycm_show_diagnostics_ui = 0
+        :YcmRestartServer
+        :e
+        :echo "YCM off"
+    endif
+endfunction
+
+"Toggle Mouse integration on and off
+function Toggle_mouse()
+    if &mouse == ""
+        :set mouse=a
+        :echo "Mouse on"
+    else
+        :set mouse=
+        :echo "Mouse off"
+    endif
+endfunction
+
+" Default <Leader> is '\'
+map <Leader>yt :call Toggle_ycm() <CR>
+map <Leader>mt :call Toggle_mouse() <CR>
+
+nmap <Leader>yd :silent YcmCompleter GetDoc<CR>
+nmap <Leader>yD :pclose<CR>
+
+nmap <Leader>tl :TlistToggle<CR>
+nmap <Leader>nt :NERDTree<CR>
+
+nmap <Leader>cc :lclose <bar> sign unplace *<CR>
+nmap <Leader>pl :PymodeLint<CR>
+
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+
+" Map Ctrl-Arrow from Insert Mode to move to the Window on the left, right, up, down
+inoremap <ESC>[D   <ESC><C-w>hi
+inoremap <ESC>[C   <ESC><C-w>li
+inoremap <ESC>[A   <ESC><C-w>ki
+inoremap <ESC>[B   <ESC><C-w>ji
+
+tnoremap <ESC>[D   <C-w>hi
+tnoremap <ESC>[C   <C-w>li
+tnoremap <ESC>[A   <C-w>ki
+tnoremap <ESC>[B   <C-w>ji
+
+
+let g:zenburn_high_Contrast=1
+"colorscheme zenburn
+"colorscheme darkblue
+colorscheme koehler
+
+"Use od -oc in a terminal to learn character codes
+
+" See https://github.com/tpope/vim-unimpaired/blob/master/doc/unimpaired.txt for more mappings
+
+
+" set the 'cpoptions' to its Vim default
+if 1    " only do this when compiled with expression evaluation
+  let s:save_cpo = &cpoptions
+endif
+set cpo&vim
+
+" set 'selection', 'selectmode', 'mousemodel' and 'keymodel' for MS-Windows
+behave mswin
+
+" backspace and cursor keys wrap to previous/next line
+set backspace=indent,eol,start whichwrap+=<,>,[,]
+
+" backspace in Visual mode deletes selection
+vnoremap <BS> d
+
+if has("clipboard")
+    " CTRL-X and SHIFT-Del are Cut
+    vnoremap <C-X>    "+x
+    vnoremap <S-Del>  "+x
+
+    " CTRL-C and CTRL-Insert are Copy
+    vnoremap <C-C>       "+y
+    vnoremap <C-Insert>  "+y
+
+    " CTRL-V and SHIFT-Insert are Paste
+    map <C-V>       "+gP
+    map <S-Insert>  "+gP
+
+    cmap <C-V>      <C-R>+
+    cmap <S-Insert> <C-R>+
+endif
+
+" Pasting blockwise and linewise selections is not possible in Insert and
+" Visual mode without the +virtualedit feature.  They are pasted as if they
+" were characterwise instead.
+" Uses the paste.vim autoload script.
+" Use CTRL-G u to have CTRL-Z only undo the paste.
+
+if 1
+    exe 'inoremap <script> <C-V> <C-G>u' . paste#paste_cmd['i']
+    exe 'vnoremap <script> <C-V> ' . paste#paste_cmd['v']
+endif
+
+imap <S-Insert>     <C-V>
+vmap <S-Insert>     <C-V>
+
+" Use CTRL-Q to do what CTRL-V used to do
+noremap <C-Q>       <C-V>
+
+" Use CTRL-S for saving, also in Insert mode
+"noremap <C-S>      :update<CR>
+"vnoremap <C-S>     <C-C>:update<CR>
+"inoremap <C-S>     <C-O>:update<CR>
+
+" For CTRL-V to work autoselect must be off.
+" On Unix we have two selections, autoselect can be used.
+if !has("unix")
+  set guioptions-=a
+endif
+
+" CTRL-Z is Undo; not in cmdline though
+"noremap <C-Z> u
+"inoremap <C-Z> <C-O>u
+
+" CTRL-Y is Redo (although not repeat); not in cmdline though
+"noremap <C-Y> <C-R>
+"inoremap <C-Y> <C-O><C-R>
+
+" Alt-Space is System menu
+if has("gui")
+  noremap <M-Space> :simalt ~<CR>
+  inoremap <M-Space> <C-O>:simalt ~<CR>
+  cnoremap <M-Space> <C-C>:simalt ~<CR>
+endif
+
+" CTRL-A is Select all
+noremap <C-A> gggH<C-O>G
+inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+cnoremap <C-A> <C-C>gggH<C-O>G
+onoremap <C-A> <C-C>gggH<C-O>G
+snoremap <C-A> <C-C>gggH<C-O>G
+xnoremap <C-A> <C-C>ggVG
+
+" CTRL-Tab is Next window
+noremap <C-Tab> <C-W>w
+inoremap <C-Tab> <C-O><C-W>w
+cnoremap <C-Tab> <C-C><C-W>w
+onoremap <C-Tab> <C-C><C-W>w
+
+" CTRL-F4 is Close window
+noremap <C-F4> <C-W>c
+inoremap <C-F4> <C-O><C-W>c
+cnoremap <C-F4> <C-C><C-W>c
+onoremap <C-F4> <C-C><C-W>c
+
+if has("gui")
+  " CTRL-F is the search dialog
+"  noremap  <expr> <C-F> has("gui_running") ? ":promptfind\<CR>" : "/"
+"  inoremap <expr> <C-F> has("gui_running") ? "\<C-\>\<C-O>:promptfind\<CR>" : "\<C-\>\<C-O>/"
+"  cnoremap <expr> <C-F> has("gui_running") ? "\<C-\>\<C-C>:promptfind\<CR>" : "\<C-\>\<C-O>/"
+
+  " CTRL-H is the replace dialog,
+  " but in console, it might be backspace, so don't map it there
+"  nnoremap <expr> <C-H> has("gui_running") ? ":promptrepl\<CR>" : "\<C-H>"
+"  inoremap <expr> <C-H> has("gui_running") ? "\<C-\>\<C-O>:promptrepl\<CR>" : "\<C-H>"
+"  cnoremap <expr> <C-H> has("gui_running") ? "\<C-\>\<C-C>:promptrepl\<CR>" : "\<C-H>"
+endif
+
+" restore 'cpoptions'
+set cpo&
+if 1
+  let &cpoptions = s:save_cpo
+  unlet s:save_cpo
+endif
+
+" Start NERDTree and put the cursor back in the other window.
+autocmd VimEnter * NERDTree | wincmd p
+
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+"autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" Close the tab if NERDTree is the only window remaining in it.
+"autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" Open the existing NERDTree on each new tab.
+autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
